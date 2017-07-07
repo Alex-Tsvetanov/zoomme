@@ -1,7 +1,9 @@
 #ifndef ZOOMWIDGET_HPP
 #define ZOOMWIDGET_HPP
 
-#include <QGLWidget>
+#include <QtOpenGL>
+#include <QOpenGLWidget>
+#include <QPen>
 
 namespace Ui {
 	class zoomwidget;
@@ -20,12 +22,13 @@ enum ZoomWidgetState {
 };
 
 enum ZoomWidgetDrawMode {
+	DRAWMODE_FREEHAND,
 	DRAWMODE_ARROW,
 	DRAWMODE_LINE,
 	DRAWMODE_RECT,
 };
 
-class ZoomWidget : public QGLWidget
+class ZoomWidget : public QWidget
 {
 	Q_OBJECT
 
@@ -59,6 +62,7 @@ private:
 	// User objects.
 	QVector<UserObjectData> _userRects;
 	QVector<UserObjectData> _userLines;
+	QVector<UserObjectData> _userFreeHand;
 
 	// Moving properties.
 	int		_shiftMultiplier;
