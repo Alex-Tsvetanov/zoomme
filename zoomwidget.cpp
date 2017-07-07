@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 
 ZoomWidget::ZoomWidget(QWidget *parent) :
-		QGLWidget(parent),
+		QWidget(parent),
 		ui(new Ui::zoomwidget)
 {
 	ui->setupUi(this);
@@ -21,7 +21,7 @@ ZoomWidget::ZoomWidget(QWidget *parent) :
 	_shiftMultiplier = 2;
 	_scaleSensivity = 0.1f;
 
-	_drawMode = DRAWMODE_LINE;
+	_drawMode = DRAWMODE_FREEHAND;
 
 	_activePen.setColor(QColor(255, 0, 0));
 	_activePen.setWidth(4);
@@ -58,6 +58,13 @@ void ZoomWidget::paintEvent(QPaintEvent *event)
 		p.drawLine(x, y, x+w, y+h);
 	}
 
+	// Draw user lines.
+	for (int i = 0; i < _userLines.size(); ++i) {
+		p.setPen(_userLines.at(i).pen);
+		getRealUserObjectPos(_userLines.at(i), &x, &y, &w, &h);
+		p.draw(x, y, x+w, y+h);
+	}
+
 	// Draw active user object.
 	if (_state == STATE_DRAWING) {
 		p.setPen(_activePen);
@@ -71,6 +78,10 @@ void ZoomWidget::paintEvent(QPaintEvent *event)
 			p.drawRect(x, y, width, height);
 		} else if (_drawMode == DRAWMODE_LINE) {
 			p.drawLine(x, y, width + x, height + y);
+		}
+		else if (_drawMode == DRAWMODE_FREEHAND) {
+		}
+		else if (_drawMode == DRAWMODE_ARROW) {
 		}
 	}
 
